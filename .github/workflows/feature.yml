@@ -1,5 +1,8 @@
 name: Historia Finalizada
 
+permissions:
+  contents: write
+
 on:
   push:
     branches:
@@ -13,19 +16,13 @@ jobs:
     steps:
       - name: Checkout de repositorio
         uses: actions/checkout@v2
-      
-      - name: Set Git config
-        run: |
-            git config --local user.email "actions@github.com"
-            git config --local user.name "Github Actions"
-      - name: Merge master back to dev
-        run: |
-            git fetch --unshallow
-            git checkout develop
-            git pull
-            git checkout ${{ github.ref_name }}
-            git merge --no-ff develop -m "Auto-merge master back to dev"
-            git push
+
+      - name: Mezclar rama develop en feature
+        uses: tukasz/direct-merge-action@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          source-branch: develop
+          target-branch: ${{ github.ref }}
 
       - name: Configuración de entorno de python
         uses: actions/setup-python@v4
@@ -43,8 +40,10 @@ jobs:
         run: python -m unittest discover -s tests 
 
       - name: Merge a develop
-        run: |
-          git fetch --unshallow
-          git checkout develop
-          git pull
-          git merge --no-ff ${{ github.ref_name }} -m "Auto merge feature to develop"
+        if: ${{ success() }}
+        uses: tukasz/direct-merge-action@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          source-branch: ${{ github.ref_name }}
+          target-branch: develop
+          commit-message: "Release: ${{ github.ref }} mezclada en develop"
