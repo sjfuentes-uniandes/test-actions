@@ -14,12 +14,15 @@ jobs:
       - name: Checkout de repositorio
         uses: actions/checkout@v2
       
+      - name: Obtener las ramas remotas
+        run: |
+          git fetch --all  
+          git branch -a    
+      
       - name: Merge develop to feature
-        uses: tukasz/direct-merge-action@master
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          source-branch: develop
-          target-branch: ${{ github.ref }}
+        run: |
+          git pull origin develop --no-rebase
+          git merge origin/develop -m "Merge develop into feature"
   
   run-tests:
     name: Correr las pruebas
