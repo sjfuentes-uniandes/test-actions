@@ -19,9 +19,8 @@ jobs:
       - name: Obtener último valor de tag
         id: tag
         run: |
-
           git fetch --tags --unshallow
-          LATEST_TAG=$(git describe --tags --abbrev=0)
+          LATEST_TAG=$(git describe --tags --abbrev=0 || echo "v0.0")
           echo "Latest tag: $LATEST_TAG"
           
           VERSION=$(echo $LATEST_TAG | sed -E 's/v([0-9]+)\.([0-9]+)/\1.\2/')
@@ -31,12 +30,12 @@ jobs:
           NEW_TAG="v$MAJOR.$NEW_MINOR"
 
           echo "New tag: $NEW_TAG"
-          echo "::set-output name=NEW_TAG::$NEW_TAG"
+          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
 
       - name: Crear rama release
         run: |
-          git checkout -b release/${{ steps.tag.outputs.NEW_TAG }}
-          git push -f -u origin release/${{ steps.tag.outputs.NEW_TAG }}
+          git checkout -b release/${{ env.NEW_TAG }}
+          git push -f -u origin release/${{ env.NEW_TAG }}
 
       - name: Configuración de entorno de python
         uses: actions/setup-python@v4
@@ -51,19 +50,21 @@ jobs:
       - name: Correr pruebas
         id: correr-pruebas
         run: python -m unittest discover -s tests
-        
+
       - name: Merge a main
         uses: tukasz/direct-merge-action@master
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          source-branch: release/${{ steps.tag.outputs.NEW_TAG }}
+          source-branch: release/${{ env.NEW_TAG }}
           target-branch: main
+
       - name: Crear nuevo tag
         uses: actions/create-release@latest
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.tag.outputs.NEW_TAG }}
-          release_name: ${{ steps.tag.outputs.NEW_TAG }}
+          tag_name: ${{ env.NEW_TAG }}
+          release_name: ${{ env.NEW_TAG }}
           draft: false
           prerelease: false
+      
