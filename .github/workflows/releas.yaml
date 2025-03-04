@@ -59,3 +59,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           source-branch: release/${{ env.NEW_TAG }}
           target-branch: main
+          
