@@ -22,9 +22,9 @@ jobs:
       - name: Merge develop to feature
         run: |
           git checkout develop
-          git pull origin develop
+          git pull develop
           git checkout ${{ github.ref_name }}
-          git merge origin/develop
+          git merge develop
       
   
   run-tests:
