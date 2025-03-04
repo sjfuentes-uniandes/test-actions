@@ -43,6 +43,7 @@ jobs:
         run: python -m unittest discover -s tests 
 
       - name: Merge a develop
+        if: ${{ success() }}
         run: |
           git fetch --unshallow
           git checkout develop
