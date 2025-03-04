@@ -2,26 +2,39 @@ name: Release
 
 permissions:
   contents: write
-
+  
 on:
-  workflow_run:
-    workflows: ["Historia Finalizada"]
-    types:
-      - completed
+  push:
+    branches:
+      - 'develop'
     
 jobs:
   create-release-branch:
     name: Crear la rama release
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout de repositorio
         uses: actions/checkout@v2
 
+      - name: Obtener último valor de tag
+        id: tag
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0 || echo "v0.0")
+          echo "Latest tag: $LATEST_TAG"
+          
+          VERSION=$(echo $LATEST_TAG | sed -E 's/v([0-9]+)\.([0-9]+)/\1.\2/')
+          MAJOR=$(echo $VERSION | cut -d. -f1)
+          MINOR=$(echo $VERSION | cut -d. -f2)
+          NEW_MINOR=$((MINOR + 1))
+          NEW_TAG="v$MAJOR.$NEW_MINOR"
+
+          echo "New tag: $NEW_TAG"
+          echo "::set-output name=NEW_TAG::$NEW_TAG"
+
       - name: Crear rama release
         run: |
-          git checkout -b release/v2.0
-          git push -f -u origin release/v2.0
+          git checkout -b release/${{ steps.tag.outputs.NEW_TAG }}
+          git push -f -u origin release/${{ steps.tag.outputs.NEW_TAG }}
 
       - name: Configuración de entorno de python
         uses: actions/setup-python@v4
@@ -36,12 +49,11 @@ jobs:
       - name: Correr pruebas
         id: correr-pruebas
         run: python -m unittest discover -s tests
-  
+        
       - name: Merge a main
-        if: ${{ success() }}
         uses: tukasz/direct-merge-action@master
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          source-branch: release/v2.0
+          source-branch: release/${{ steps.tag.outputs.NEW_TAG }}
           target-branch: main
-          
+      
