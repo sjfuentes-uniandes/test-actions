@@ -5,7 +5,7 @@ permissions:
 
 on:
   workflow_run:
-    workflows: ["Nombre del Workflow que hace el commit"]
+    workflows: ["Historia Finalizada"]
     types:
       - completed
     
