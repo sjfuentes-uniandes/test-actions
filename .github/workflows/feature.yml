@@ -1,5 +1,8 @@
 name: Historia Finalizada
 
+permissions:
+  contents: write
+
 on:
   push:
     branches:
