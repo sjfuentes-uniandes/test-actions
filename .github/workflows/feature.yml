@@ -14,16 +14,19 @@ jobs:
       - name: Checkout de repositorio
         uses: actions/checkout@v2
       
-      - name: Obtener las ramas remotas
+      - name: Set Git config
         run: |
-          git fetch origin 
-          git branch -a    
-      
-      - name: Merge develop to feature
+            git config --local user.email "actions@github.com"
+            git config --local user.name "Github Actions"
+      - name: Merge master back to dev
         run: |
-          git pull origin develop --no-rebase
-          git merge origin/develop --no-ff --no-rebase -m "Merge develop into feature"
- 
+            git fetch --unshallow
+            git checkout develop
+            git pull
+            git checkout ${{ github.ref_name }}
+            git merge --no-ff develop -m "Auto-merge master back to dev"
+            git push
+  
           
   run-tests:
     name: Correr las pruebas
