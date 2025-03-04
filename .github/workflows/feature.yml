@@ -25,13 +25,7 @@ jobs:
             git pull
             git checkout ${{ github.ref_name }}
             git merge --no-ff develop -m "Auto-merge master back to dev"
-  
-          
-  run-tests:
-    name: Correr las pruebas
-    needs: merge-develop-to-feature
-    runs-on: ubuntu-latest
-    steps:
+
       - name: Configuración de entorno de python
         uses: actions/setup-python@v4
         with:
@@ -45,18 +39,11 @@ jobs:
 
       - name: Correr pruebas
         id: correr-pruebas
-        run: python -m unittest discover -s tests
+        run: python -m unittest discover -s tests 
 
-  merge-develop:
-    name: Merge a develop
-    needs: run-tests
-    runs-on: ubuntu-latest
-    steps:  
-    - name: Merge a develop
-      uses: tukasz/direct-merge-action@master
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        source-branch: ${{ github.ref }}
-        target-branch: develop
-        commit-message: "Release: ${{ github.ref }} mezclada en develop"
-      
+      - name: Merge a develop
+        run: |
+          git fetch --unshallow
+          git checkout develop
+          git pull
+          git merge --no-ff ${{ github.ref_name }} -m "Auto merge feature to develop"
