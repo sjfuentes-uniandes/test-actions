@@ -16,13 +16,13 @@ jobs:
       
       - name: Obtener las ramas remotas
         run: |
-          git fetch --all  
+          git fetch origin 
           git branch -a    
       
       - name: Merge develop to feature
         run: |
-          git pull origin develop --no-rebase
-          git merge origin/develop --allow-unrelated-histories -m "Merge develop into feature"
+          git pull origin develop
+          git merge origin/develop --no-ff --no-rebase -m "Merge develop into feature"
  
           
   run-tests:
