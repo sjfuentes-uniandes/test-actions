@@ -16,16 +16,24 @@ jobs:
     steps:
       - name: Checkout de repositorio
         uses: actions/checkout@v2
+
+      - name: Mezclar rama develop en feature
+        uses: tukasz/direct-merge-action@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          source-branch: develop
+          target-branch: ${{ github.ref_name }}
+
       
 
-      - name: Merge master back to dev
-        run: |
-            git fetch --unshallow
-            git checkout develop
-            git pull
-            git checkout ${{ github.ref_name }}
-            git merge --no-ff develop -m "Auto-merge master back to dev"
-            git push
+      # - name: Merge master back to dev
+      #   run: |
+      #       git fetch --unshallow
+      #       git checkout develop
+      #       git pull
+      #       git checkout ${{ github.ref_name }}
+      #       git merge --no-ff develop -m "Auto-merge master back to dev"
+      #       git push
 
       - name: Configuración de entorno de python
         uses: actions/setup-python@v4
