@@ -25,6 +25,7 @@ jobs:
             git pull
             git checkout ${{ github.ref_name }}
             git merge --no-ff develop -m "Auto-merge master back to dev"
+            git push
 
       - name: Configuración de entorno de python
         uses: actions/setup-python@v4
