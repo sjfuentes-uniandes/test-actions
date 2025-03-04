@@ -39,9 +39,9 @@ jobs:
           git push -f -u origin release/${{ env.NEW_TAG }}
 
       - name: Configuración de entorno de python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.7'
+          python-version: '3.9'
 
       - name: Instalación de librerías y dependencias
         run: |
