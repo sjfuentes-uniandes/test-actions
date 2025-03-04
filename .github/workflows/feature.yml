@@ -22,7 +22,7 @@ jobs:
       - name: Merge develop to feature
         run: |
           git pull origin develop --no-rebase
-          git merge origin/develop -m "Merge develop into feature"
+          git merge origin/develop --allow-unrelated-histories -m "Merge develop into feature"
  
           
   run-tests:
