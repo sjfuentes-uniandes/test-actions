@@ -21,10 +21,8 @@ jobs:
       
       - name: Merge develop to feature
         run: |
-          git pull --rebase origin develop
+          git pull origin develop --no-rebase
           git merge origin/develop -m "Merge develop into feature"
-
-      
   
   run-tests:
     name: Correr las pruebas
