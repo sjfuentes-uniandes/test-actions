@@ -46,4 +46,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           source-branch: ${{ github.ref_name }}
           target-branch: develop
-          commit-message: "Release : ${{ github.ref }} mezclada en develop"
+          commit-message: "Release ${{ github.ref }} mezclada en develop"
+
