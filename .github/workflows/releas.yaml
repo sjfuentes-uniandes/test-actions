@@ -2,7 +2,7 @@ name: Release
 
 permissions:
   contents: write
-  
+
 on:
   push:
     branches:
@@ -19,7 +19,9 @@ jobs:
       - name: Obtener último valor de tag
         id: tag
         run: |
-          LATEST_TAG=$(git describe --tags --abbrev=0 || echo "v0.0")
+
+          git fetch --tags --unshallow
+          LATEST_TAG=$(git describe --tags --abbrev=0)
           echo "Latest tag: $LATEST_TAG"
           
           VERSION=$(echo $LATEST_TAG | sed -E 's/v([0-9]+)\.([0-9]+)/\1.\2/')
