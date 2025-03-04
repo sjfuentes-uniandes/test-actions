@@ -17,14 +17,14 @@ jobs:
       - name: Obtener las ramas remotas
         run: |
           git fetch --all  
-          git branch -r    
+          git branch -a    
       
       - name: Merge develop to feature
         run: |
-          git checkout develop
-          git pull develop
-          git checkout ${{ github.ref_name }}
-          git merge develop
+          git checkout orgin/develop
+          git pull orgin/develop
+          git checkout ${{ github.ref }}
+          git merge orgin/develop
       
   
   run-tests:
