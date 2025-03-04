@@ -19,6 +19,8 @@ jobs:
       - name: Obtener último valor de tag
         id: tag
         run: |
+
+          git fetch --tags --unshallow
           LATEST_TAG=$(git describe --tags --abbrev=0)
           echo "Latest tag: $LATEST_TAG"
           
