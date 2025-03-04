@@ -22,18 +22,7 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           source-branch: develop
-          target-branch: ${{ github.ref_name }}
-
-      
-
-      # - name: Merge master back to dev
-      #   run: |
-      #       git fetch --unshallow
-      #       git checkout develop
-      #       git pull
-      #       git checkout ${{ github.ref_name }}
-      #       git merge --no-ff develop -m "Auto-merge master back to dev"
-      #       git push
+          target-branch: ${{ github.ref }}
 
       - name: Configuración de entorno de python
         uses: actions/setup-python@v4
@@ -52,8 +41,9 @@ jobs:
 
       - name: Merge a develop
         if: ${{ success() }}
-        run: |
-          git fetch --unshallow
-          git checkout develop
-          git pull
-          git merge --no-ff ${{ github.ref_name }} -m "Auto merge feature to develop"
+        uses: tukasz/direct-merge-action@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          source-branch: ${{ github.ref_name }}
+          target-branch: develop
+          commit-message: "Release: ${{ github.ref }} mezclada en develop"
