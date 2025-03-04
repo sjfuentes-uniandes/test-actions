@@ -58,4 +58,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           source-branch: release/${{ steps.tag.outputs.NEW_TAG }}
           target-branch: main
-      
+      - name: Crear nuevo tag
+        run: |
+          git tag ${{ steps.tag.outputs.NEW_TAG }}
+          git push origin --tags
