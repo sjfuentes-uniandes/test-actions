@@ -59,6 +59,11 @@ jobs:
           source-branch: release/${{ steps.tag.outputs.NEW_TAG }}
           target-branch: main
       - name: Crear nuevo tag
-        run: |
-          git tag ${{ steps.tag.outputs.NEW_TAG }}
-          git push origin --tags
+        uses: actions/create-release@latest
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag.outputs.NEW_TAG }}
+          release_name: ${{ steps.tag.outputs.NEW_TAG }}
+          draft: false
+          prerelease: false
