@@ -23,7 +23,8 @@ jobs:
         run: |
           git pull origin develop --no-rebase
           git merge origin/develop -m "Merge develop into feature"
-  
+ 
+          
   run-tests:
     name: Correr las pruebas
     needs: merge-develop-to-feature
