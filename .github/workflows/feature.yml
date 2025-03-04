@@ -39,6 +39,7 @@ jobs:
 
       - name: Instalación de librerías y dependencias
         run: |
+          ls -al
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
