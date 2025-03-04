@@ -21,10 +21,11 @@ jobs:
       
       - name: Merge develop to feature
         run: |
-          git checkout origin/develop
-          git pull origin/develop
+          git fetch origin
           git checkout ${{ github.ref_name }}
-          git merge origin/develop
+          git pull origin develop
+          git merge origin/develop -m "Merge develop into feature"
+
       
   
   run-tests:
