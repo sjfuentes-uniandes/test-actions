@@ -33,11 +33,6 @@ jobs:
           git checkout -b release/${{ steps.tag.outputs.NEW_TAG }}
           git push -f -u origin release/${{ steps.tag.outputs.NEW_TAG }}
 
-  run-tests:
-    name: Correr las pruebas
-    needs: create-release-branch
-    runs-on: ubuntu-latest
-    steps:
       - name: Configuración de entorno de python
         uses: actions/setup-python@v4
         with:
@@ -51,15 +46,11 @@ jobs:
       - name: Correr pruebas
         id: correr-pruebas
         run: python -m unittest discover -s tests
-  
-  merge-main:
-    name: Merge a main
-    needs: run-tests
-    runs-on: ubuntu-latest
-    steps:
+        
       - name: Merge a main
         uses: tukasz/direct-merge-action@master
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           source-branch: release/${{ steps.tag.outputs.NEW_TAG }}
           target-branch: main
+      
