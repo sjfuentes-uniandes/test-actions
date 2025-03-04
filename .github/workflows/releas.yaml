@@ -67,4 +67,3 @@ jobs:
           release_name: ${{ env.NEW_TAG }}
           draft: false
           prerelease: false
-      
